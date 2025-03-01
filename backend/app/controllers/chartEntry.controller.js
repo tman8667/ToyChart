@@ -29,7 +29,7 @@ exports.create = (req, res) => {
 
     ChartEntry.create(chartEntry)
         .then(data => {
-            res.send(data);
+            res.status(200).send(data);
         })
         .catch(err => {
             res.status(500).send({
@@ -54,7 +54,7 @@ exports.findAll = (req, res) => {
         ],
     })
         .then(data => {
-            res.send(data);
+            res.status(200).send(data);
         })
         .catch(err => {
             res.status(500).send({
@@ -70,7 +70,7 @@ exports.findOne = (req, res) => {
     ChartEntry.findByPk(id)
         .then(data => {
             if (data) {
-                res.send(data);
+                res.status(200).send(data);
             }
             else {
                 res.status(404).send({
@@ -89,17 +89,18 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    ChartEntry.update(req.body, {
-        where: { id: id }
+    ChartEntry.update(
+        req.body,
+        { where: { id: id }
     })
         .then(num => {
-            if (num === 1) {
-                res.send({
+            if (num == 1) {
+                res.status(200).send({
                     message: "Chart entry was updated successfully."
                 });
             }
             else {
-                res.send({
+                res.status(404).send({
                     message: `Cannot find chartEntry with id=${id}.`
                 });
             }
@@ -120,12 +121,12 @@ exports.delete = (req, res) => {
     })
         .then(num => {
             if (num === 1) {
-                res.send({
+                res.status(200).send({
                     message: "Chart entry was successfully deleted"
                 });
             }
             else {
-                res.send({
+                res.status(404).send({
                     message: `Chart entry with id=${id} does not exist.`
                 });
             }
