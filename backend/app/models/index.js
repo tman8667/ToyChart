@@ -19,5 +19,6 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.chartEntry = require("./chartEntry.model.js")(sequelize, Sequelize);
+db.chartFormula = require("./chartFormula.model.js")(sequelize, Sequelize);
 
 module.exports = db;

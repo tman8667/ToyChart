@@ -5,7 +5,7 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.STRING
         },
         chartDate: {
-            type: DataTypes.DATEONLY
+            type: DataTypes.STRING
         },
         song: {
             type: DataTypes.STRING
@@ -27,6 +27,9 @@ module.exports = (sequelize, Sequelize) => {
         },
         radioAudience: {
             type: DataTypes.INTEGER
+        },
+        points: {
+            type: DataTypes.DOUBLE
         },
         imgURL: {
             type: DataTypes.STRING
