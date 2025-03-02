@@ -11,9 +11,9 @@ app.use(cors(corsOptions));
 
 const db = require("./app/models");
 db.sequelize.sync();
-/*db.sequelize.sync({ force: true }).then(() => {
-    console.log("Drop and re-sync db.");
-});*/
+// db.sequelize.sync({ force: true }).then(() => {
+//     console.log("Drop and re-sync db.");
+// });
 
 // Parse requests of content-type application/json
 app.use(express.json());
@@ -27,6 +27,7 @@ app.get("/", (req, res) => {
 });
 
 require("./app/routes/chartEntry.routes")(app);
+require("./app/routes/chartFormula.routes")(app);
 
 // Set port, listen for requests
 const PORT = process.env.port || 8080;

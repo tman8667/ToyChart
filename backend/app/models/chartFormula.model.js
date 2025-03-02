@@ -13,9 +13,6 @@ module.exports = (sequelize, Sequelize) => {
         programmedStreamsMultiplier: {
             type: DataTypes.DOUBLE
         },
-        streamsMultiplier: {
-            type: DataTypes.DOUBLE
-        },
         salesMultiplier: {
             type: DataTypes.DOUBLE
         },

@@ -39,6 +39,7 @@ exports.create = (req, res) => {
 };
 
 // Retrieve all ChartEntries from the database matching parameters
+// TODO: Add ability to find all chartNames
 exports.findAll = (req, res) => {
     const chartName = req.query.chartName;
     const chartDate = req.query.chartDate;
@@ -58,7 +59,7 @@ exports.findAll = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || "An error occurred retrieving entries"
+                message: err.message || "An error occurred retrieving entries."
             })
         });
 };
@@ -122,7 +123,7 @@ exports.delete = (req, res) => {
         .then(num => {
             if (num === 1) {
                 res.status(200).send({
-                    message: "Chart entry was successfully deleted"
+                    message: "Chart entry was successfully deleted."
                 });
             }
             else {
