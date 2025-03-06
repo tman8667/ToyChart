@@ -9,6 +9,9 @@ module.exports = app => {
     // Retrieve all ChartEntries with condition
     router.get ("/", chartEntries.findAll);
 
+    // Get all chartDates for a certain chartName
+    router.get("/getDates", chartEntries.findDates);
+
     // Retrieve a ChartEntry by id
     router.get("/:id", chartEntries.findOne);
 

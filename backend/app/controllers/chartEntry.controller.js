@@ -39,7 +39,6 @@ exports.create = (req, res) => {
 };
 
 // Retrieve all ChartEntries from the database matching parameters
-// TODO: Add ability to find all chartNames
 exports.findAll = (req, res) => {
     const chartName = req.query.chartName;
     const chartDate = req.query.chartDate;
@@ -63,6 +62,34 @@ exports.findAll = (req, res) => {
             })
         });
 };
+
+exports.findDates = (req, res) => {
+    const chartName = req.query.chartName;
+
+    ChartEntry.findAll({
+        attributes: ['chartDate'],
+        where: [
+            { chartName: { [Op.like]: chartName } }
+        ],
+        group: 'chartDate',
+        order: [['chartDate', 'DESC']],
+    })
+        .then(data => {
+            if (data) {
+                res.status(200).send(data);
+            }
+            else {
+                res.status(404).send({
+                    message: `Chart with name ${chartName} does not exist.`
+                })
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "An error occurred retrieving entries."
+            })
+        });
+}
 
 // Find a single ChartEntry with an id
 exports.findOne = (req, res) => {

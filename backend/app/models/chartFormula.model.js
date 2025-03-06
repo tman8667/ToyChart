@@ -2,7 +2,8 @@ const {DataTypes} = require("sequelize");
 module.exports = (sequelize, Sequelize) => {
     const ChartFormula = sequelize.define("chartFormula", {
         chartName: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            unique: true
         },
         freeStreamsMultiplier: {
             type: DataTypes.DOUBLE

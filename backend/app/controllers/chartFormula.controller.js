@@ -26,16 +26,36 @@ exports.create = (req, res) => {
             res.status(200).send(data);
         })
         .catch(err => {
-            res.status(500).send({
-                message: err.message || "There was an error creating the chartFormula."
-            })
+            if (err.name === 'SequelizeUniqueConstraintError') {
+                res.status(403).send({
+                    message: "That chartName already exists"
+                })
+            }
+            else {
+                res.status(500).send({
+                    message: err.message || "There was an error creating the chartFormula."
+                });
+            }
         });
 }
 
 exports.findAll = (req, res) => {
-    ChartFormula.findAll()
+    const chartName = req.query.chartName ? req.query.chartName : "%%";
+
+    ChartFormula.findAll({
+        where: {
+            chartName: { [Op.like]: chartName }
+        }
+    })
         .then(data => {
-            res.status(200).send(data);
+            if (data.size) {
+                res.status(200).send(data);
+            }
+            else {
+                res.status(404).send({
+                    message: "A chart with that name does not exist"
+                })
+            }
         })
         .catch(err => {
             res.status(500).send({
