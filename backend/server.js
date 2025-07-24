@@ -14,6 +14,7 @@ db.sequelize.sync();
 // db.sequelize.sync({ force: true }).then(() => {
 //     console.log("Drop and re-sync db.");
 // });
+// Testing gitignore
 
 // Parse requests of content-type application/json
 app.use(express.json());
