@@ -1,7 +1,7 @@
 module.exports = {
     HOST: "localhost",
-    USER: "root",
-    PASSWORD: "resumeProject12345",
+    USER: "CHANGE TO YOUR USER",
+    PASSWORD: "CHANGE TO YOUR PASSWORD",
     DB: "toyChartDB",
     dialect: "mysql",
     pool: {
