@@ -52,6 +52,7 @@ exports.findAll = (req, res) => {
             { song: { [Op.like]: `%${song}%` } },
             { artist: { [Op.like]: `%${artist}%` } }
         ],
+        order: ['points', 'DESC'],
     })
         .then(data => {
             res.status(200).send(data);
