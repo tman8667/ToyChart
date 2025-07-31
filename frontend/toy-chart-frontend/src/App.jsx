@@ -20,7 +20,7 @@ function App() {
                       <input type="free streams multiplier" className="form-control" id="freeMultInput"
                              placeholder="Free streams multiplier">
                       </input>
-                      <input type="paid streams multiplier" className="form-control" id="paidMaultInput"
+                      <input type="paid streams multiplier" className="form-control" id="paidMultInput"
                              placeholder="Paid streams multiplier">
                       </input>
                       <input type="programmed streams multiplier" className="form-control" id="programmedMultInput"
@@ -154,25 +154,113 @@ function SelectChartDate() {
     )
 }
 
-function handleFormula() {
+async function handleFormula() {
     const chartName = document.getElementById("chartNameInput").value;
     const freeMult = document.getElementById("freeMultInput").value;
     const paidMult = document.getElementById("paidMultInput").value;
     const programmedMult = document.getElementById("programmedMultInput").value;
+    const salesMult = document.getElementById("salesMultInput").value;
+    const radioMult = document.getElementById("radioMultInput").value;
+
+    const reqBody = {
+        "chartName": chartName,
+        "freeStreamsMultiplier": freeMult,
+        "paidStreamsMultiplier": paidMult,
+        "programmedStreamsMultiplier": programmedMult,
+        "salesMultiplier": salesMult,
+        "radioAudienceMultiplier": radioMult
+    }
+    console.log(reqBody);
+
+    const response = await fetch("http://localhost:8080/api/chartFormula/", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(reqBody)
+    });
+
+    const body = await response.json();
+
+    if (response.status === 500 || response.status === 403) {
+        alert(body.message);
+    }
+    else if (response.status === 200) {
+        alert("Chart formula added successfully.");
+    }
 }
 
-function handleRetrieveFormula() {
+async function handleRetrieveFormula() {
+    const response = await fetch("http://localhost:8080/api/chartFormula/", {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+
+    const body = await response.json();
+
+    if (response.status === 500) {
+        alert(body.message);
+    }
+    else if (response.status === 200) {
+        const tableBody = document.getElementById("formulasTableBody");
+
+        if (tableBody) {
+            tableBody.innerHTML = "";
+        }
+
+        body.forEach((formula) => {
+            const row = tableBody.insertRow();
+            let cell = row.insertCell();
+            cell.textContent = formula.chartName;
+            cell = row.insertCell();
+            cell.textContent = formula.freeStreamsMultiplier;
+            cell = row.insertCell();
+            cell.textContent = formula.paidStreamsMultiplier;
+            cell = row.insertCell();
+            cell.textContent = formula.programmedStreamsMultiplier;
+            cell = row.insertCell();
+            cell.textContent = formula.salesMultiplier;
+            cell = row.insertCell();
+            cell.textContent = formula.radioAudienceMultiplier;
+        });
+    }
+}
+
+async function handleAddEntry() {
 
 }
 
-function handleAddEntry() {
-
-}
-
-function getDates() {
+async function getDates() {
     const chartName = document.getElementById("getChartNameInput").value;
     const dropdownBody = document.getElementById("selectChartDates");
 
+    const response = await fetch(
+        "http://localhost:8080/api/chartEntry/getDates?chartName=" + encodeURI(chartName), {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+
+    const body = await response.json();
+
+    if (response.status === 500 || response.status === 404) {
+        alert(body.message);
+    }
+    else if (response.status === 200) {
+        if (dropdownBody) {
+            dropdownBody.innerHTML = "";
+        }
+
+        body.forEach((date) => {
+            // Add dates to dropdown
+        });
+    }
 }
 
 export default App
