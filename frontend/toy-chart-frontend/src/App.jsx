@@ -14,7 +14,7 @@ function App() {
                           different components (must be decimal values that sum to 1). If you do not know what to use
                           for the stream tiers, use a 48/45/7% split of total streaming weight for
                           free/paid/programmed.</p>
-                      <input type="chart name" className="form-control" id="chartNameInput"
+                      <input type="chart name" className="form-control" id="chartNameFormulaInput"
                              placeholder="Chart Name">
                       </input>
                       <input type="free streams multiplier" className="form-control" id="freeMultInput"
@@ -56,7 +56,7 @@ function App() {
                       <p>Enter a name for the chart to add to (must have a chart formula with that name added) and
                           enter the details. Chart date string can be any format but must be consistent to retrieve
                           entries for the same date.</p>
-                      <input type="chart name" className="form-control" id="chartNameInput"
+                      <input type="chart name" className="form-control" id="chartNameEntryInput"
                              placeholder="Chart Name">
                       </input>
                       <input type="chart date" className="form-control" id="chartDateInput"
@@ -155,7 +155,7 @@ function SelectChartDate() {
 }
 
 async function handleFormula() {
-    const chartName = document.getElementById("chartNameInput").value;
+    const chartName = document.getElementById("chartNameFormulaInput").value;
     const freeMult = document.getElementById("freeMultInput").value;
     const paidMult = document.getElementById("paidMultInput").value;
     const programmedMult = document.getElementById("programmedMultInput").value;
@@ -170,7 +170,6 @@ async function handleFormula() {
         "salesMultiplier": salesMult,
         "radioAudienceMultiplier": radioMult
     }
-    console.log(reqBody);
 
     const response = await fetch("http://localhost:8080/api/chartFormula/", {
         method: "POST",
@@ -231,7 +230,74 @@ async function handleRetrieveFormula() {
 }
 
 async function handleAddEntry() {
+    const chartName = document.getElementById("chartNameEntryInput").value;
+    const chartDate = document.getElementById("chartDateInput").value;
+    const song = document.getElementById("songInput").value;
+    const artist = document.getElementById("aristInput").value;
+    const freeStreams = document.getElementById("freeStreamsInput").value;
+    const paidStreams = document.getElementById("paidStreamsInput").value;
+    const programmedStreams = document.getElementById("programmedStreamsInput").value;
+    const sales = document.getElementById("salesInput").value;
+    const radio = document.getElementById("radioInput").value;
+    const imgURL = document.getElementById("imgURLInput").value;
 
+    const response = await fetch(
+        "http://localhost:8080/api/chartFormula/getDates?chartName=" + encodeURI(chartName), {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json"
+            }
+    });
+
+    const body = await response.json();
+
+
+    let points = 0;
+    if (response.status === 500 || response.status === 404) {
+        alert(body.message);
+        return;
+    }
+    else if (response.status === 200) {
+        points = (freeStreams * body.freeStreamsMultiplier) +
+            (paidStreams * body.paidStreamsMultiplier) +
+            (programmedStreams * body.programmedStreamsMultiplier) +
+            (sales * body.salesMultiplier) +
+            (radio * body.radioAudienceMultiplier);
+    }
+
+    const reqBody = {
+        "chartName": chartName,
+        "chartDate": chartDate,
+        "song": song,
+        "artist": artist,
+        "freeStreams": freeStreams,
+        "paidStreams": paidStreams,
+        "programmedStreams": programmedStreams,
+        "sales": sales,
+        "radioAudience": radio,
+        "points": points,
+        "imgURL": imgURL
+    }
+
+    const response2 = await fetch(
+        "http://localhost:8080/api/chartEntry/" + encodeURI(chartName), {
+            method: "POST",
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(reqBody)
+        });
+
+    const body2 = await response2.json();
+
+    if (response2.status === 500 || response.status === 403) {
+        alert(body2.message);
+    }
+    else if (response2.status === 200) {
+        alert("Chart entry added successfully.");
+    }
 }
 
 async function getDates() {
@@ -239,7 +305,7 @@ async function getDates() {
     const dropdownBody = document.getElementById("selectChartDates");
 
     const response = await fetch(
-        "http://localhost:8080/api/chartEntry/getDates?chartName=" + encodeURI(chartName), {
+        "http://localhost:8080/api/chartEntry/?chartName=" + encodeURI(chartName), {
         method: "GET",
         mode: "cors",
         headers: {
