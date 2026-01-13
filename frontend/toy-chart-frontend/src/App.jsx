@@ -92,13 +92,15 @@ function App() {
                   </div>
                   <div className="AddEntry">
                       <h2> View Chart Entries </h2>
-                      <p>Enter a name for the chart to retrieve entries from, then select a date from the dropdown.</p>
+                      <p>Enter a name for the chart to retrieve entries from, then select a date from the dropdown
+                          and click "Retrieve Entries".</p>
                       <input type="chart name" className="form-control" id="getChartNameInput"
                              placeholder="Chart Name">
                       </input>
                       <SelectChartDate/>
                       <br></br>
                       <br></br>
+                      <RetrieveEntriesButton/>
                       <table id="entriesTable">
                           <tbody id="entriesTableHeader">
                           <tr>
@@ -152,6 +154,14 @@ function SelectChartDate() {
     return (
         <select onClick={getDates} name={"ChartDates"} id="selectChartDates"></select>
     )
+}
+
+function RetrieveEntriesButton() {
+    return (
+        <button onClick={handleGetEntries} id="retrieveEntries">
+            Retrieve Entries
+        </button>
+    );
 }
 
 async function handleFormula() {
@@ -233,7 +243,7 @@ async function handleAddEntry() {
     const chartName = document.getElementById("chartNameEntryInput").value;
     const chartDate = document.getElementById("chartDateInput").value;
     const song = document.getElementById("songInput").value;
-    const artist = document.getElementById("aristInput").value;
+    const artist = document.getElementById("artistInput").value;
     const freeStreams = document.getElementById("freeStreamsInput").value;
     const paidStreams = document.getElementById("paidStreamsInput").value;
     const programmedStreams = document.getElementById("programmedStreamsInput").value;
@@ -241,17 +251,16 @@ async function handleAddEntry() {
     const radio = document.getElementById("radioInput").value;
     const imgURL = document.getElementById("imgURLInput").value;
 
-    const response = await fetch(
-        "http://localhost:8080/api/chartFormula/getDates?chartName=" + encodeURI(chartName), {
-            method: "GET",
-            mode: "cors",
-            headers: {
-                "Content-Type": "application/json"
-            }
+    const URI = "http://localhost:8080/api/chartFormula/?chartName=" + encodeURI(chartName);
+    const response = await fetch(URI, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            "Content-Type": "application/json"
+        }
     });
 
     const body = await response.json();
-
 
     let points = 0;
     if (response.status === 500 || response.status === 404) {
@@ -259,11 +268,11 @@ async function handleAddEntry() {
         return;
     }
     else if (response.status === 200) {
-        points = (freeStreams * body.freeStreamsMultiplier) +
-            (paidStreams * body.paidStreamsMultiplier) +
-            (programmedStreams * body.programmedStreamsMultiplier) +
-            (sales * body.salesMultiplier) +
-            (radio * body.radioAudienceMultiplier);
+        points = (freeStreams * body[0].freeStreamsMultiplier) +
+            (paidStreams * body[0].paidStreamsMultiplier) +
+            (programmedStreams * body[0].programmedStreamsMultiplier) +
+            (sales * body[0].salesMultiplier) +
+            (radio * body[0].radioAudienceMultiplier);
     }
 
     const reqBody = {
@@ -281,7 +290,7 @@ async function handleAddEntry() {
     }
 
     const response2 = await fetch(
-        "http://localhost:8080/api/chartEntry/" + encodeURI(chartName), {
+        "http://localhost:8080/api/chartEntry/", {
             method: "POST",
             mode: "cors",
             headers: {
@@ -305,7 +314,7 @@ async function getDates() {
     const dropdownBody = document.getElementById("selectChartDates");
 
     const response = await fetch(
-        "http://localhost:8080/api/chartEntry/?chartName=" + encodeURI(chartName), {
+        "http://localhost:8080/api/chartEntry/getDates/?chartName=" + encodeURI(chartName), {
         method: "GET",
         mode: "cors",
         headers: {
@@ -325,8 +334,13 @@ async function getDates() {
 
         body.forEach((date) => {
             // Add dates to dropdown
+            dropdownBody.innerHTML += "<option value=\"" + date.chartDate + "\">" + date.chartDate + "</option>";
         });
     }
+}
+
+async function handleGetEntries() {
+
 }
 
 export default App
