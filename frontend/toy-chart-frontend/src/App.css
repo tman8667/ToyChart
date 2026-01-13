@@ -52,6 +52,11 @@ p {
   font-size: 25px;
 }
 
+img {
+  width: 200px;
+  height: 200px
+}
+
 #selectChartDates {
   font-size: 15px;
 }

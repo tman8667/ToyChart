@@ -92,8 +92,9 @@ function App() {
                   </div>
                   <div className="AddEntry">
                       <h2> View Chart Entries </h2>
-                      <p>Enter a name for the chart to retrieve entries from, then select a date from the dropdown
-                          and click "Retrieve Entries".</p>
+                      <p>Enter a name for the chart to retrieve entries from and click "Get Dates", then select a date
+                          from the dropdown and click "Retrieve Entries".</p>
+                      <GetDatesButton/>
                       <input type="chart name" className="form-control" id="getChartNameInput"
                              placeholder="Chart Name">
                       </input>
@@ -152,8 +153,18 @@ function SubmitAddEntryButton() {
 
 function SelectChartDate() {
     return (
-        <select onClick={getDates} name={"ChartDates"} id="selectChartDates"></select>
+        <select name={"ChartDates"} id="selectChartDates">
+            <option value="default">--Dates Will Appear Here--</option>
+        </select>
     )
+}
+
+function GetDatesButton() {
+    return(
+        <button onClick={getDates} id="getDates">
+        Get Dates
+        </button>
+    );
 }
 
 function RetrieveEntriesButton() {
@@ -340,7 +351,53 @@ async function getDates() {
 }
 
 async function handleGetEntries() {
+    const chartName = document.getElementById("getChartNameInput").value;
+    const dropdownBody = document.getElementById("selectChartDates");
 
+    const URI = "http://localhost:8080/api/chartEntry/?chartName=" + encodeURI(chartName)
+        + "&chartDate=" + encodeURI(dropdownBody.value);
+    const response = await fetch(URI, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+
+    const body = await response.json();
+
+    if (response.status === 500) {
+        alert(body.message);
+    }
+    else if (response.status === 200) {
+        const tableBody = document.getElementById("entriesTableBody");
+
+        if (tableBody) {
+            tableBody.innerHTML = "";
+        }
+
+        body.forEach((entry) => {
+            const row = tableBody.insertRow();
+            let cell = row.insertCell();
+            cell.innerHTML = "<img alt='' src=" + entry.imgURL + ">";
+            cell = row.insertCell();
+            cell.textContent = entry.song;
+            cell = row.insertCell();
+            cell.textContent = entry.artist;
+            cell = row.insertCell();
+            cell.textContent = entry.freeStreams;
+            cell = row.insertCell();
+            cell.textContent = entry.paidStreams;
+            cell = row.insertCell();
+            cell.textContent = entry.programmedStreams;
+            cell = row.insertCell();
+            cell.textContent = entry.sales;
+            cell = row.insertCell();
+            cell.textContent = entry.radioAudience;
+            cell = row.insertCell();
+            cell.textContent = entry.points;
+        });
+    }
 }
 
 export default App
