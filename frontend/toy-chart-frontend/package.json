@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "chromedriver": "^143.0.4",
+    "mocha": "^11.7.5",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "selenium-webdriver": "^4.39.0"

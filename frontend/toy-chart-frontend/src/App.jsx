@@ -11,8 +11,8 @@ function App() {
                   <div className="AddFormula">
                       <h2> Chart Formulas </h2>
                       <p>Enter a name for your chart (cannot be an existing name) and the multipliers for the
-                          different components (must be decimal values that sum to 1). If you do not know what to use
-                          for the stream tiers, use a 48/45/7% split of total streaming weight for
+                          different components (must be positive decimal values that sum to 1). If you do not know
+                          what to use for the stream tiers, use a 48/45/7% split of total streaming weight for
                           free/paid/programmed.</p>
                       <input type="chart name" className="form-control" id="chartNameFormulaInput"
                              placeholder="Chart Name">
@@ -55,7 +55,8 @@ function App() {
                       <h2> Add Chart Entry </h2>
                       <p>Enter a name for the chart to add to (must have a chart formula with that name added) and
                           enter the details. Chart date string can be any format but must be consistent to retrieve
-                          entries for the same date.</p>
+                          entries for the same date. If the image URL is left empty or is not a valid URL, a
+                          default image will be used.</p>
                       <input type="chart name" className="form-control" id="chartNameEntryInput"
                              placeholder="Chart Name">
                       </input>
@@ -183,6 +184,18 @@ async function handleFormula() {
     const salesMult = document.getElementById("salesMultInput").value;
     const radioMult = document.getElementById("radioMultInput").value;
 
+    // Check input validity
+    if (isNaN(+freeMult) || isNaN(+paidMult) || isNaN(+programmedMult) || isNaN(+salesMult) || isNaN(+radioMult)) {
+        alert("Multipliers must be numbers");
+        return;
+    } else if ((+freeMult) < 0 || (+paidMult) < 0 || (+programmedMult) < 0 || (+salesMult) < 0 || (+radioMult) < 0) {
+        alert("Multipliers cannot be negative");
+        return;
+    } else if ((+freeMult) + (+paidMult) + (+programmedMult) + (+salesMult) + (+radioMult) !== 1) {
+        alert("Multipliers must sum to 1");
+        return;
+    }
+
     const reqBody = {
         "chartName": chartName,
         "freeStreamsMultiplier": freeMult,
@@ -260,8 +273,23 @@ async function handleAddEntry() {
     const programmedStreams = document.getElementById("programmedStreamsInput").value;
     const sales = document.getElementById("salesInput").value;
     const radio = document.getElementById("radioInput").value;
-    const imgURL = document.getElementById("imgURLInput").value;
+    let imgURL = document.getElementById("imgURLInput").value;
 
+    // Check input validity
+    if (isNaN(+freeStreams) || isNaN(+paidStreams) || isNaN(+programmedStreams) || isNaN(+sales) || isNaN(+radio)) {
+        alert("Streams/sales/radio values must be numbers");
+        return;
+    } else if ((+freeStreams) < 0 || (+paidStreams) < 0 || (+programmedStreams) < 0 || (+sales) < 0 || (+radio) < 0) {
+        alert("Streams/sales/radio cannot be negative");
+        return;
+    }
+
+    // Use a default image for artwork if URL not provided/not valid
+    if(!isValidHttpUrl(imgURL)) {
+        imgURL = "https://p7.hiclipart.com/preview/228/53/109/phonograph-record-record-sleeve-compact-disc-album-cover-pvc-vector.jpg"
+    }
+
+    alert(imgURL);
     const URI = "http://localhost:8080/api/chartFormula/?chartName=" + encodeURI(chartName);
     const response = await fetch(URI, {
         method: "GET",
@@ -398,6 +426,22 @@ async function handleGetEntries() {
             cell.textContent = entry.points;
         });
     }
+}
+
+// Helper function to check if a URL is valid
+// Created by Pavlo on StackOverflow: https://stackoverflow.com/a/43467144
+function isValidHttpUrl(string) {
+    let url;
+
+    try {
+        url = new URL(string);
+    } catch (e) {
+        if (e instanceof TypeError) {
+            return false;
+        }
+    }
+
+    return url.protocol === "http:" || url.protocol === "https:";
 }
 
 export default App
