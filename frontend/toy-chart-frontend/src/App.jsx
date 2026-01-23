@@ -185,14 +185,19 @@ async function handleFormula() {
     const radioMult = document.getElementById("radioMultInput").value;
 
     // Check input validity
-    if (isNaN(+freeMult) || isNaN(+paidMult) || isNaN(+programmedMult) || isNaN(+salesMult) || isNaN(+radioMult)) {
-        alert("Multipliers must be numbers");
+    if (chartName.length === 0 || freeMult.length === 0 || paidMult.length === 0 || programmedMult.length === 0 ||
+        salesMult.length === 0 || radioMult.length === 0) {
+        alert("Fields cannot be empty.");
+        return;
+    }
+    else if (isNaN(+freeMult) || isNaN(+paidMult) || isNaN(+programmedMult) || isNaN(+salesMult) || isNaN(+radioMult)) {
+        alert("Multipliers must be numbers.");
         return;
     } else if ((+freeMult) < 0 || (+paidMult) < 0 || (+programmedMult) < 0 || (+salesMult) < 0 || (+radioMult) < 0) {
-        alert("Multipliers cannot be negative");
+        alert("Multipliers cannot be negative.");
         return;
     } else if ((+freeMult) + (+paidMult) + (+programmedMult) + (+salesMult) + (+radioMult) !== 1) {
-        alert("Multipliers must sum to 1");
+        alert("Multipliers must sum to 1.");
         return;
     }
 
