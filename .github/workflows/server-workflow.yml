@@ -16,6 +16,6 @@ jobs:
           node-version: '22.17.1'
 
       - name: Run server
-        run: npm start
+        run: cd backend | npm start
         env:
           AVIEN_PASSWORD: ${{ secrets.AVIEN_PASSWORD }}
