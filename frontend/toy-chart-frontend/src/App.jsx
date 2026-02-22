@@ -185,7 +185,7 @@ async function handleFormula() {
     const radioMult = document.getElementById("radioMultInput").value;
 
     // Check input validity
-    if (chartName.length === 0 || freeMult.length === 0 || paidMult.length === 0 || programmedMult.length === 0 ||
+    if (freeMult.length === 0 || paidMult.length === 0 || programmedMult.length === 0 ||
         salesMult.length === 0 || radioMult.length === 0) {
         alert("Fields cannot be empty.");
         return;
@@ -294,7 +294,6 @@ async function handleAddEntry() {
         imgURL = "https://p7.hiclipart.com/preview/228/53/109/phonograph-record-record-sleeve-compact-disc-album-cover-pvc-vector.jpg"
     }
 
-    alert(imgURL);
     const URI = "http://localhost:8080/api/chartFormula/?chartName=" + encodeURI(chartName);
     const response = await fetch(URI, {
         method: "GET",

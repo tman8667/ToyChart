@@ -1,7 +1,8 @@
 module.exports = {
-    HOST: "localhost",
-    USER: "root",
-    PASSWORD: "resumeProject12345",
+    HOST: "mysql-14c01bce-toy-chart.c.aivencloud.com",
+    PORT: 21958,
+    USER: "avnadmin",
+    PASSWORD: "",
     DB: "toyChartDB",
     dialect: "mysql",
     pool: {
