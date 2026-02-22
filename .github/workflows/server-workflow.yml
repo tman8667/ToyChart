@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.17.1'
+
+      - name: Run server
+        run: npm start
+        env:
+          AVIEN_PASSWORD: ${{ secrets.AVIEN_PASSWORD }}
