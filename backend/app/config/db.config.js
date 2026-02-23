@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 module.exports = {
     HOST: "mysql-14c01bce-toy-chart.c.aivencloud.com",
     PORT: 21958,

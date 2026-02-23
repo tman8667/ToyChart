@@ -48,7 +48,7 @@ exports.findAll = (req, res) => {
         }
     })
         .then(data => {
-            if (data) {
+            if (data.length > 0) {
                 res.status(200).send(data);
             }
             else {

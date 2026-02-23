@@ -38,15 +38,20 @@ test('add formula', async () => {
 
     // Accept alert and check text
     await driver.wait(until.alertIsPresent(), 5000);
-    let alert = await driver.switchTo().alert()
+    let alert = await driver.switchTo().alert();
     let alertText = await alert.getText();
     await alert.accept();
     expect(alertText).toEqual("Chart formula added successfully.");
 
     // Retrieve formulas and verify
     await driver.findElement(By.id("retrieveFormula")).click();
-    let tableBody = await driver.findElement(By.id("formulasTableBody")).getText();
-    expect(tableBody).toMatch(new RegExp(date));
+    let tableBody = await driver.findElement(By.id("formulasTableBody"));
+    await driver.wait(async () => {
+        const text = await tableBody.getText();
+        return text.includes(date);
+    }, 2000);
+    let tableText = await tableBody.getText();
+    expect(tableText).toMatch(new RegExp(date));
 });
 
 test('empty fields', async () => {
@@ -55,7 +60,7 @@ test('empty fields', async () => {
 
     // Accept alert and check text
     await driver.wait(until.alertIsPresent(), 5000);
-    let alert = await driver.switchTo().alert()
+    let alert = await driver.switchTo().alert();
     let alertText = await alert.getText();
     await alert.accept();
     expect(alertText).toEqual("Fields cannot be empty.");
@@ -91,7 +96,7 @@ test('multiplier sum not 1', async () => {
 
     // Accept alert and check text
     await driver.wait(until.alertIsPresent(), 5000);
-    let alert = await driver.switchTo().alert()
+    let alert = await driver.switchTo().alert();
     let alertText = await alert.getText();
     await alert.accept();
     expect(alertText).toEqual("Multipliers must sum to 1.");
@@ -109,7 +114,7 @@ test('negative multipliers', async () => {
 
     // Accept alert and check text
     await driver.wait(until.alertIsPresent(), 5000);
-    let alert = await driver.switchTo().alert()
+    let alert = await driver.switchTo().alert();
     let alertText = await alert.getText();
     await alert.accept();
     expect(alertText).toEqual("Multipliers cannot be negative.");
@@ -127,7 +132,7 @@ test('name already exists', async () => {
 
     // Accept alert and check text
     await driver.wait(until.alertIsPresent(), 5000);
-    let alert = await driver.switchTo().alert()
+    let alert = await driver.switchTo().alert();
     let alertText = await alert.getText();
     await alert.accept();
     expect(alertText).toEqual("That chartName already exists");
