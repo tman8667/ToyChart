@@ -210,7 +210,7 @@ async function handleFormula() {
         "radioAudienceMultiplier": radioMult
     }
 
-    const response = await fetch("http://localhost:8080/api/chartFormula/", {
+    const response = await fetch("/api/chartFormula/", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -230,7 +230,7 @@ async function handleFormula() {
 }
 
 async function handleRetrieveFormula() {
-    const response = await fetch("http://localhost:8080/api/chartFormula/", {
+    const response = await fetch("/api/chartFormula/", {
         method: "GET",
         mode: "cors",
         headers: {
@@ -294,7 +294,7 @@ async function handleAddEntry() {
         imgURL = "https://p7.hiclipart.com/preview/228/53/109/phonograph-record-record-sleeve-compact-disc-album-cover-pvc-vector.jpg"
     }
 
-    const URI = "http://localhost:8080/api/chartFormula/?chartName=" + encodeURI(chartName);
+    const URI = "/api/chartFormula/?chartName=" + encodeURI(chartName);
     const response = await fetch(URI, {
         method: "GET",
         mode: "cors",
@@ -333,7 +333,7 @@ async function handleAddEntry() {
     }
 
     const response2 = await fetch(
-        "http://localhost:8080/api/chartEntry/", {
+        "/api/chartEntry/", {
             method: "POST",
             mode: "cors",
             headers: {
@@ -357,7 +357,7 @@ async function getDates() {
     const dropdownBody = document.getElementById("selectChartDates");
 
     const response = await fetch(
-        "http://localhost:8080/api/chartEntry/getDates/?chartName=" + encodeURI(chartName), {
+        "/api/chartEntry/getDates/?chartName=" + encodeURI(chartName), {
         method: "GET",
         mode: "cors",
         headers: {
@@ -386,7 +386,7 @@ async function handleGetEntries() {
     const chartName = document.getElementById("getChartNameInput").value;
     const dropdownBody = document.getElementById("selectChartDates");
 
-    const URI = "http://localhost:8080/api/chartEntry/?chartName=" + encodeURI(chartName)
+    const URI = "/api/chartEntry/?chartName=" + encodeURI(chartName)
         + "&chartDate=" + encodeURI(dropdownBody.value);
     const response = await fetch(URI, {
         method: "GET",
