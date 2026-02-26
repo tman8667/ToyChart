@@ -1,9 +1,9 @@
 module.exports = {
-    HOST: "mysql-14c01bce-toy-chart.c.aivencloud.com",
-    PORT: 21958,
-    USER: "avnadmin",
-    PASSWORD: process.env.AVIEN_PASSWORD,
-    DB: "toyChartDB",
+    HOST: process.env.DB_HOST,
+    PORT: process.env.DB_PORT,
+    USER: process.env.DB_USER,
+    PASSWORD: process.env.DB_PASSWORD,
+    DB: process.env.DB_NAME,
     dialect: "mysql",
     pool: {
         max: 5,
