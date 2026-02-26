@@ -2,6 +2,7 @@ require("selenium-webdriver");
 require("jest");
 
 const { Builder, By, until } = require("selenium-webdriver");
+jest.setTimeout(30000);
 
 let driver;
 

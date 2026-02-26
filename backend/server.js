@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 
@@ -23,16 +24,18 @@ app.use(express.json());
 // Parse requests of content-type application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-// Simple test route
-app.get("/", (req, res) => {
-    res.json({ message: "Welcome to the ToyChart application"});
-});
-
 require("./app/routes/chartEntry.routes")(app);
 require("./app/routes/chartFormula.routes")(app);
 
+app.use(express.static(path.join(__dirname, "public")));
+
+// Simple test route
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
 // Set port, listen for requests
-const PORT = process.env.port || 8080;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}.`);
 });
